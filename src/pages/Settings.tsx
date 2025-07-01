@@ -6,20 +6,25 @@ import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useTheme } from '@/contexts/ThemeProvider';
+import { useGoogleSheets } from '@/hooks/useGoogleSheets';
 import {
   Settings as SettingsIcon,
   Key,
   Users,
   Bell,
-  Database,
   Save,
   Moon,
   Sun,
+  Sheet,
+  CheckCircle,
+  AlertCircle,
+  Info,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export function Settings() {
   const { theme, setTheme } = useTheme();
+  const { isConnected, connect, disconnect } = useGoogleSheets();
 
   return (
     <motion.div
@@ -131,6 +136,80 @@ export function Settings() {
                     placeholder="eyJ..."
                     defaultValue="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
                   />
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold">Google Sheets Integration</h3>
+                
+                {/* Backend Implementation Notice */}
+                <Card className="border-yellow-200 bg-yellow-50">
+                  <CardContent className="pt-4">
+                    <div className="flex items-start space-x-3">
+                      <Info className="h-4 w-4 text-yellow-600 mt-0.5" />
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium text-yellow-800">
+                          Backend Implementation Required
+                        </p>
+                        <p className="text-xs text-yellow-700">
+                          For security reasons, Google Sheets integration requires a backend server to handle OAuth token exchange. 
+                          The client secret should never be exposed in frontend code.
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <div className="flex items-center space-x-2">
+                      <Sheet className="h-4 w-4" />
+                      <Label>Google Sheets API Access</Label>
+                      {isConnected ? (
+                        <CheckCircle className="h-4 w-4 text-green-500" />
+                      ) : (
+                        <AlertCircle className="h-4 w-4 text-yellow-500" />
+                      )}
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Connect your Google account to import data from Google Sheets
+                    </p>
+                  </div>
+                  {isConnected ? (
+                    <Button variant="outline" onClick={disconnect}>
+                      Disconnect
+                    </Button>
+                  ) : (
+                    <Button onClick={connect}>
+                      Connect Google Sheets
+                    </Button>
+                  )}
+                </div>
+                
+                <div className="p-4 bg-muted/50 rounded-lg">
+                  <h4 className="font-medium mb-2">Google OAuth Configuration</h4>
+                  <div className="space-y-2 text-sm">
+                    <div>
+                      <Label className="text-xs">Client ID</Label>
+                      <p className="font-mono text-xs text-muted-foreground">
+                        {import.meta.env.VITE_GOOGLE_CLIENT_ID || 'Not configured'}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-xs">Redirect URI</Label>
+                      <p className="font-mono text-xs text-muted-foreground">
+                        {window.location.origin}/auth/google/callback
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-xs">Status</Label>
+                      <p className="text-xs text-muted-foreground">
+                        Frontend-only demo (backend required for production)
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -252,6 +331,15 @@ export function Settings() {
                     <Label>Data Upload Notifications</Label>
                     <p className="text-sm text-muted-foreground">
                       Get notified when new datasets are uploaded
+                    </p>
+                  </div>
+                  <Switch />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label>Google Sheets Sync</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Get notified when Google Sheets data is imported
                     </p>
                   </div>
                   <Switch />
