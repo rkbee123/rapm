@@ -7,6 +7,7 @@ import cron from 'node-cron';
 import { linkedinWebhookRouter } from './routes/linkedin-webhook.js';
 import { analyticsRouter } from './routes/analytics.js';
 import { dataProcessingRouter } from './routes/data-processing.js';
+import { n8nIntegrationRouter } from './routes/n8n-integration.js';
 
 // Load environment variables
 dotenv.config();
@@ -48,6 +49,7 @@ app.get('/health', (req, res) => {
 app.use('/api/webhook/linkedin', linkedinWebhookRouter);
 app.use('/api/analytics', analyticsRouter);
 app.use('/api/data', dataProcessingRouter);
+app.use('/api', n8nIntegrationRouter); // n8n integration routes
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -140,4 +142,5 @@ app.listen(PORT, () => {
   console.log(`🚀 RAP Dashboard Backend running on port ${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV}`);
   console.log(`🔗 Frontend URL: ${process.env.FRONTEND_URL}`);
+  console.log(`📨 n8n endpoint: http://localhost:${PORT}/api/from-n8n`);
 });

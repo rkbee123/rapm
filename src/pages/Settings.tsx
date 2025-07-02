@@ -9,6 +9,7 @@ import { useTheme } from '@/contexts/ThemeProvider';
 import { useGoogleSheets } from '@/hooks/useGoogleSheets';
 import { BackendStatus } from '@/components/backend/BackendStatus';
 import { WebhookStatus } from '@/components/backend/WebhookStatus';
+import { N8nStatus } from '@/components/backend/N8nStatus';
 import {
   Settings as SettingsIcon,
   Key,
@@ -103,9 +104,10 @@ export function Settings() {
         </TabsContent>
 
         <TabsContent value="backend" className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <BackendStatus />
             <WebhookStatus />
+            <N8nStatus />
           </div>
 
           <Card>
@@ -146,12 +148,12 @@ export function Settings() {
                   <Info className="h-4 w-4 text-blue-600 mt-0.5" />
                   <div className="space-y-1">
                     <p className="text-sm font-medium text-blue-800">
-                      LinkedIn Webhook Integration
+                      n8n Integration Available
                     </p>
                     <p className="text-xs text-blue-700">
-                      The backend server includes a LinkedIn webhook endpoint that can receive real-time 
-                      events from your LinkedIn automation tools. Configure your tools to send events to 
-                      the webhook URL shown above.
+                      The backend server includes an n8n endpoint at <code>/api/from-n8n</code> that can receive 
+                      data from your n8n workflows. Use this URL in your n8n HTTP Request nodes to send data 
+                      directly to your dashboard.
                     </p>
                   </div>
                 </div>
@@ -402,6 +404,15 @@ export function Settings() {
                     <Label>LinkedIn Webhook Events</Label>
                     <p className="text-sm text-muted-foreground">
                       Get notified when LinkedIn webhook events are received
+                    </p>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label>n8n Data Imports</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Get notified when n8n workflows send data to the dashboard
                     </p>
                   </div>
                   <Switch defaultChecked />
