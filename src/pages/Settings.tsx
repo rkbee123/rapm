@@ -7,6 +7,8 @@ import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useTheme } from '@/contexts/ThemeProvider';
 import { useGoogleSheets } from '@/hooks/useGoogleSheets';
+import { BackendStatus } from '@/components/backend/BackendStatus';
+import { WebhookStatus } from '@/components/backend/WebhookStatus';
 import {
   Settings as SettingsIcon,
   Key,
@@ -19,6 +21,7 @@ import {
   CheckCircle,
   AlertCircle,
   Info,
+  Server,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -41,8 +44,9 @@ export function Settings() {
       </div>
 
       <Tabs defaultValue="general" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="general">General</TabsTrigger>
+          <TabsTrigger value="backend">Backend</TabsTrigger>
           <TabsTrigger value="integrations">Integrations</TabsTrigger>
           <TabsTrigger value="team">Team</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
@@ -94,6 +98,64 @@ export function Settings() {
                 <Save className="h-4 w-4 mr-2" />
                 Save Changes
               </Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="backend" className="space-y-6">
+          <div className="grid gap-6 md:grid-cols-2">
+            <BackendStatus />
+            <WebhookStatus />
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Server className="h-5 w-5" />
+                <span>Backend Configuration</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="api-url">Backend API URL</Label>
+                  <Input
+                    id="api-url"
+                    defaultValue={import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}
+                    readOnly
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    The backend API endpoint for data processing and webhooks
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-4 bg-muted/50 rounded-lg">
+                <h4 className="font-medium mb-2">Setup Instructions</h4>
+                <ol className="text-sm text-muted-foreground space-y-1 list-decimal list-inside">
+                  <li>Install backend dependencies: <code className="bg-muted px-1 rounded">npm run backend:install</code></li>
+                  <li>Copy <code className="bg-muted px-1 rounded">server/.env.example</code> to <code className="bg-muted px-1 rounded">server/.env</code></li>
+                  <li>Configure your Supabase credentials in the server .env file</li>
+                  <li>Start the backend server: <code className="bg-muted px-1 rounded">npm run backend</code></li>
+                  <li>Or run both frontend and backend: <code className="bg-muted px-1 rounded">npm run start:all</code></li>
+                </ol>
+              </div>
+
+              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="flex items-start space-x-3">
+                  <Info className="h-4 w-4 text-blue-600 mt-0.5" />
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium text-blue-800">
+                      LinkedIn Webhook Integration
+                    </p>
+                    <p className="text-xs text-blue-700">
+                      The backend server includes a LinkedIn webhook endpoint that can receive real-time 
+                      events from your LinkedIn automation tools. Configure your tools to send events to 
+                      the webhook URL shown above.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -337,12 +399,12 @@ export function Settings() {
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label>Google Sheets Sync</Label>
+                    <Label>LinkedIn Webhook Events</Label>
                     <p className="text-sm text-muted-foreground">
-                      Get notified when Google Sheets data is imported
+                      Get notified when LinkedIn webhook events are received
                     </p>
                   </div>
-                  <Switch />
+                  <Switch defaultChecked />
                 </div>
               </div>
 
